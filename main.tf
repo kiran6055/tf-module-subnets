@@ -10,6 +10,7 @@ resource "aws_subnet" "main" {
   )
 }
 
+# creating aws route table
 resource "aws_route_table" "route_table" {
   vpc_id = var.vpc_id
 
@@ -22,4 +23,11 @@ resource "aws_route_table" "route_table" {
     local.common_tags,
     { Name = "${var.env}-${var.name}-route_table" }
   )
+}
+
+# creating route table association
+resource "aws_route_table_association" "association" {
+  count          = length(aws_subnet_main)
+  subnet_id      = aws_subnet.main.*.id[count.index]
+  route_table_id = aws_route_table.route_table.id
 }
