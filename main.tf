@@ -10,3 +10,18 @@ resource "aws_subnet" "main" {
   )
 }
 
+# creating a route table
+
+resource "aws_route_table" "route_table" {
+  vpc_id = var.vpc_id
+
+  route {
+    ipv6_cidr_block        = data.aws_vpc.default.cidr_block
+    vpc_peering_connection_id = var.vpc_peering_connection_id
+  }
+
+  tags       = merge(
+    local.common_tags,
+    { Name = "${var.env}-${var.name}-route_table" }
+  )
+}
